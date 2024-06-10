@@ -1,0 +1,13 @@
+FROM golang:alpine
+
+WORKDIR /Go
+
+COPY . .
+
+RUN go mod init Proyecto1
+RUN go get github.com/gorilla/mux
+RUN go get github.com/gorilla/handlers
+
+EXPOSE 3000
+
+CMD [ "go", "run", "main.go"]
