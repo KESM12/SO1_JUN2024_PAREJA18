@@ -193,6 +193,7 @@ func main() {
 
 			fmt.Println("porcentaje:", cpuInfo.Porcentaje)
 			fmt.Println("cpu informacion de processos: ", cpuInfo.Procesos)
+			//controller.insertdata(Datacpu{"CPU%":  Porcentaje: cpuInfo.Porcentaje})
 
 			//Mandar respuesta (ejemplo simple de uso)
 			for _, proceso := range cpuInfo.Procesos {
