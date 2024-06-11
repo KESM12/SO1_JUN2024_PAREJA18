@@ -2,16 +2,20 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"strconv"
 	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Datacpu struct {
@@ -19,7 +23,7 @@ type Datacpu struct {
 	Porcentaje int    `json:"porcentaje"`
 }
 
-type Datacpu2 struct {
+type Dataram struct {
 	Fecha      string `json:"fecha"`
 	Porcentaje int    `json:"porcentaje"`
 }
@@ -51,14 +55,7 @@ type Ram struct {
 	Libre      int `json:"libre"`
 	Porcentaje int `json:"porcentaje"`
 }
-type Dataram struct {
-	Fecha      string `json:"fecha"`
-	Porcentaje int    `json:"porcentaje"`
-}
 
-type Ip struct {
-	Ip string `json:"ip"`
-}
 type Respuestacpu struct {
 	Mensaje string `json:"mensaje"`
 }
@@ -67,12 +64,8 @@ type Respuestaram struct {
 	Mensaje string `json:"mensaje"`
 }
 
-func Index(x http.ResponseWriter, w *http.Request) {
-	fmt.Fprintf(x, "sserver")
-
-}
-
 var process *exec.Cmd
+var mongoClient *mongo.Client
 
 func StartProcess(w http.ResponseWriter, r *http.Request) {
 	// Crear un nuevo proceso con un comando de espera
@@ -83,10 +76,8 @@ func StartProcess(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error al iniciar el proceso", http.StatusInternalServerError)
 		return
 	}
-
 	// Obtener el comando con PID
 	process = cmd
-
 	fmt.Fprintf(w, "Proceso iniciado con PID: %d y estado en espera", process.Process.Pid)
 }
 
@@ -96,13 +87,11 @@ func KillProcess(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Se requiere el parámetro 'pid'", http.StatusBadRequest)
 		return
 	}
-
 	pid, err := strconv.Atoi(pidStr)
 	if err != nil {
 		http.Error(w, "El parámetro 'pid' debe ser un número entero", http.StatusBadRequest)
 		return
 	}
-
 	// Enviar señal SIGCONT al proceso con el PID proporcionado
 	cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
 	err = cmd.Run()
@@ -110,7 +99,6 @@ func KillProcess(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid), http.StatusInternalServerError)
 		return
 	}
-
 	fmt.Fprintf(w, "Proceso con PID %d ha terminado", pid)
 }
 
@@ -118,7 +106,7 @@ func CPUModuleHandler(w http.ResponseWriter, r *http.Request) {
 	cmdCpu := exec.Command("sh", "-c", "cat /proc/cpu_so1_1s2024")
 	outCpu, err := cmdCpu.CombinedOutput()
 	if err != nil {
-		fmt.Println("eerror", err)
+		fmt.Println("error", err)
 	}
 	var cpu_info Cpu
 	err = json.Unmarshal([]byte(outCpu), &cpu_info)
@@ -159,6 +147,21 @@ func main() {
 	router.HandleFunc("/api/start", StartProcess)
 	router.HandleFunc("/api/kill", KillProcess)
 
+	// Configurar conexión a MongoDB
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
+	var err error
+	mongoClient, err = mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = mongoClient.Ping(context.TODO(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Conexión a MongoDB establecida")
+
 	go func() {
 		log.Fatal(http.ListenAndServe(":5200", handlers.CORS()(router)))
 	}()
@@ -175,6 +178,17 @@ func main() {
 			re := strconv.Itoa(now.Year()) + "-" + fmt.Sprintf("%02d", now.Month()) + "-" + fmt.Sprintf("%02d", now.Day()) + "-" + fmt.Sprintf("%02d", now.Hour()) + "-" + fmt.Sprintf("%02d", now.Minute()) + "-" + fmt.Sprintf("%02d", second1)
 			fmt.Println("re")
 			fmt.Println(re)
+
+			// Check if the CPU module file exists
+			if _, err := os.Stat("/proc/cpu_so1_jun2024"); os.IsNotExist(err) {
+				// If the file does not exist, load the module
+				cmd := exec.Command("sudo", "insmod", "/home/taro/Modulos/CPU/cpu.ko")
+				if err := cmd.Run(); err != nil {
+					fmt.Println("error loading module:", err)
+					return
+				}
+			}
+
 			cmdCpu := exec.Command("sh", "-c", "cat /proc/cpu_so1_jun2024")
 			outCpu, err := cmdCpu.CombinedOutput()
 			if err != nil {
@@ -204,9 +218,19 @@ func main() {
 						child.Pid, child.Nombre, child.Estado, child.Padre)
 				}
 			}
-			go sendToAPI("/cpu", cpuInfo.Porcentaje)
+			//go sendToAPI("/cpu", cpuInfo.Porcentaje)
 			fmt.Println(" ==================== DATOS MODULO RAM ==================== ")
 			fmt.Println(" ")
+
+			// Check if the CPU module file exists
+			if _, err := os.Stat("/proc/ram_so1_jun2024"); os.IsNotExist(err) {
+				// If the file does not exist, load the module
+				cmd := exec.Command("sudo", "insmod", "/home/taro/Modulos/RAM/ram.ko")
+				if err := cmd.Run(); err != nil {
+					fmt.Println("error loading module:", err)
+					return
+				}
+			}
 			cmdRam := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
 			outRam, err := cmdRam.CombinedOutput()
 			if err != nil {
@@ -220,34 +244,75 @@ func main() {
 				fmt.Println(err)
 			}
 			go sendToAPI("/ram", ram_info.Porcentaje)
-			fmt.Println(ram_info.Porcentaje)
-			fmt.Println(ram_info.En_uso)
+			go sendToAPI("/cpu", cpuInfo.Porcentaje)
+			// fmt.Println(ram_info.Porcentaje)
+			// fmt.Println(ram_info.En_uso)
 
 		}
 	}
 }
 
-func sendToAPI(route string, data interface{}) {
-
-	url := fmt.Sprintf("http://localhost:5200/api%s", route)
-
+func sendToAPI(endpoint string, data interface{}) {
+	url := "http://34.171.101.34:5200" + endpoint
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		log.Println("Error al convertir datos a JSON:", err)
+		fmt.Println(err)
 		return
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	// Enviar datos a la API
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
-		log.Println("Error al enviar datos a la API:", err)
+		fmt.Println(err)
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		log.Println("La API respondió con un código de estado no válido:", resp.StatusCode)
-		return
+	// Insertar datos en MongoDB
+	collectionName := ""
+	if endpoint == "/cpu" {
+		collectionName = "cpu_data"
+	} else if endpoint == "/ram" {
+		collectionName = "ram_data"
 	}
 
-	log.Printf("Datos enviados a la ruta %s\n", route)
+	collection := mongoClient.Database("mydatabase").Collection(collectionName)
+	_, err = collection.InsertOne(context.TODO(), data)
+	if err != nil {
+		fmt.Println("Error inserting data into MongoDB:", err)
+	}
 }
+
+// func sendToAPI(route string, data interface{}) {
+
+// 	url := fmt.Sprintf("http://localhost:5200/api%s", route)
+
+// 	jsonData, err := json.Marshal(data)
+// 	if err != nil {
+// 		log.Println("Error al convertir datos a JSON:", err)
+// 		return
+// 	}
+
+// 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+// 	if err != nil {
+// 		log.Println("Error al enviar datos a la API:", err)
+// 		return
+// 	}
+// 	defer resp.Body.Close()
+
+// 	if resp.StatusCode != http.StatusOK {
+// 		log.Println("La API respondió con un código de estado no válido:", resp.StatusCode)
+// 		return
+// 	}
+
+// 	log.Printf("Datos enviados a la ruta %s\n", route)
+
+// }

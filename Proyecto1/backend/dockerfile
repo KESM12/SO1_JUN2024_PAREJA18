@@ -7,6 +7,9 @@ COPY . .
 RUN go mod init Proyecto1
 RUN go get github.com/gorilla/mux
 RUN go get github.com/gorilla/handlers
+RUN go get go.mongodb.org/mongo-driver/mongo
+RUN go get go.mongodb.org/mongo-driver/mongo/options
+
 
 EXPOSE 3000
 
