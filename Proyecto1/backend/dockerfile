@@ -10,6 +10,7 @@ RUN go get github.com/gorilla/handlers
 RUN go get go.mongodb.org/mongo-driver/mongo
 RUN go get go.mongodb.org/mongo-driver/mongo/options
 RUN go get github.com/gofiber/fiber/v2
+RUN go get github.com/joho/godotenv
 #RUN docker run --name mongo_container -d -p 27017:27017 mongo:latest
 
 ENV DB=HOST="localhost"

@@ -1,27 +1,31 @@
 package Model
 
+// Define la estructura de la memoria RAM
 type Ram struct {
-	Total      string `json:"totalRam"`
-	En_uso     string `json:"memoriaEnUso"`
-	Libre      string `json:"libre"`
-	Porcentaje string `json:"porcentaje"`
+	Total      int `json:"totalRam"`
+	En_uso     int `json:"memoriaEnUso"`
+	Libre      int `json:"libre"`
+	Porcentaje int `json:"porcentaje"`
 }
 
-// Define la estructura del proceso
-type Process struct {
-	Pid    int     `json:"pid"`
-	Nombre string  `json:"name"`
-	Estado int     `json:"state"`
-	Padre  int     `json:"pidPadre"`
-	Chil   []Child `json:"child"`
+// Process representa un proceso individual.
+type Hijos struct {
+	PID      int    `json:"pid"`
+	Name     string `json:"name"`
+	State    int    `json:"state"`
+	PIDPadre int    `json:"pidPadre,omitempty"` // Se omite si está vacío.
 }
 
-type Child struct {
-	Pid    int    `json:"pid"`
-	Nombre string `json:"name"`
-	Estado int    `json:"state"`
+// ParentProcess representa un proceso padre que contiene procesos hijos.
+type Process struct { //DataProcess
+	PID   int     `json:"pid"`
+	Name  string  `json:"name"`
+	State int     `json:"state"`
+	Child []Hijos `json:"child"`
 }
 
-type CPUInfo struct {
-	Processes []Process `json:"processes"`
+// Processes representa la estructura principal que contiene una lista de procesos padres.
+type Cpu struct {
+	Porcentaje int       `json:"cpu_porcentaje"`
+	Processes  []Process `json:"processes"`
 }

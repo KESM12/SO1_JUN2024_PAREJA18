@@ -17,6 +17,8 @@ type MongoInstance struct {
 	Db     *mongo.Database
 }
 
+var Mg *mongo.Client
+
 func Connect() error {
 	err := godotenv.Load()
 	if err != nil {
@@ -46,3 +48,22 @@ func Connect() error {
 
 	return nil
 }
+func Ping() error {
+	return Mg.Ping(context.TODO(), nil)
+}
+
+// package Database
+
+// import (
+// 	"context"
+// 	"log"
+// 	"main/Instance"
+// 	"os"
+// 	"time"
+
+// 	"github.com/joho/godotenv"
+// 	"go.mongodb.org/mongo-driver/mongo"
+// 	"go.mongodb.org/mongo-driver/mongo/options"
+// )
+
+// f
