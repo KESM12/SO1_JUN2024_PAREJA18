@@ -1,15 +1,20 @@
 FROM golang:alpine
 
-WORKDIR /Go
+WORKDIR /back
 
 COPY . .
 
-RUN go mod init Proyecto1
+RUN go mod init main
 RUN go get github.com/gorilla/mux
 RUN go get github.com/gorilla/handlers
 RUN go get go.mongodb.org/mongo-driver/mongo
 RUN go get go.mongodb.org/mongo-driver/mongo/options
 RUN go get github.com/gofiber/fiber/v2
+#RUN docker run --name mongo_container -d -p 27017:27017 mongo:latest
+
+ENV DB=HOST="localhost"
+ENV DB=PORT="27017"
+ENV DB=NAME="DB"
 
 EXPOSE 3000
 
