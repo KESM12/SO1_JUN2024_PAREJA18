@@ -8,6 +8,7 @@ import (
 	"main/Controller"
 	"main/Database"
 	"main/Model"
+	"time"
 
 	// "log"
 	// "main/Database"
@@ -40,7 +41,11 @@ func main() {
 
 	// Definir rutas
 	app.Get("/cpuyram", getPorcentajeRamyCpu)
-	//app.Get("/cpu", getCPUInfo)
+	app.Get("/cpu", getCPUInfo)
+	app.Get("/iniProc", StartProcess)
+	app.Post("/killProc", KillProcess)
+	//startDeletionRoutine()
+
 	//app.Get("/ram", )
 	//getMem()
 	//Routes.Setup(app)
@@ -52,7 +57,6 @@ func main() {
 }
 
 // Obtener información de la RAM y mostrarla en el Frontend
-// Funcion para obtener datos de la RAM
 func getRAMdata() (int, error) {
 	cmd := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
 	stdout, err := cmd.CombinedOutput()
@@ -91,35 +95,9 @@ func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 		"ram_percentage": usedRAMPercentage,
 		"cpu_percentage": usedCPUPercentage,
 	}
-
+	getMem()
+	//getCPUInfo(c)
 	return c.JSON(estadisticas)
-}
-
-// func getRAMInfo(c *fiber.Ctx) error {
-// 	cmdRam := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
-// 	outRam, err := cmdRam.CombinedOutput()
-// 	if err != nil {
-// 		return c.Status(500).SendString("Error al obtener información de la RAM")
-// 	}
-
-// 	var ramInfo Model.Ram
-// 	err = json.Unmarshal(outRam, &ramInfo)
-// 	if err != nil {
-// 		return c.Status(500).SendString("Error al parsear información de la RAM")
-// 	}
-// 	getMem()
-// 	return c.JSON(ramInfo)
-// }
-
-func eliminarProceso(c *fiber.Ctx) error {
-	pid := c.Params("pid")
-	cmd := exec.Command("sh", "-c", "kill "+pid)
-	err := cmd.Run()
-	if err != nil {
-		return c.Status(500).SendString("Error al eliminar el proceso")
-	}
-
-	return c.SendString("Proceso eliminado exitosamente")
 }
 
 // Obtener información de la RAM
@@ -218,6 +196,7 @@ func getCPUInfo(c *fiber.Ctx) error {
 			fmt.Println("Error:", err)
 		}
 	}
+
 	getCpuPercentage("cpu%")
 
 	return c.JSON(cpuInfo)
@@ -271,10 +250,10 @@ func getCPU(cpuInfo *Model.Process) error {
 		PidPadre := cpuInfo.Child[0].PID
 		Controller.InserProcess("cpu", PID, Name, State, PidPadre)
 		for _, hijo := range cpuInfo.Child {
-			Controller.InserProcess("cpu", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
+			Controller.InserProcess("cpu1", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
 		}
 	} else {
-		Controller.InserProcess("cpu", PID, Name, State, 0)
+		Controller.InserProcess("cpu2", PID, Name, State, 0)
 	}
 	return nil
 }
@@ -319,6 +298,7 @@ func getCpuPercentage(nameCol string) (int, error) {
 	return cpuPercentage, nil
 }
 
+// Función para insertar el porcentaje de CPU en la base de datos
 func getCpuPercentage1() (int, error) {
 	cpuFree := exec.Command("mpstat", "1", "1")
 	var out bytes.Buffer
@@ -350,4 +330,87 @@ func getCpuPercentage1() (int, error) {
 	cpuPercentage := 100 - int(freeCPU)
 
 	return cpuPercentage, nil
+}
+
+// función para crear el proceso sleep infinity
+func StartProcess(c *fiber.Ctx) error {
+	// Crear un nuevo proceso con un comando de espera
+	cmd := exec.Command("sleep", "infinity")
+	err := cmd.Start()
+	if err != nil {
+		fmt.Print(err)
+		return c.Status(fiber.StatusInternalServerError).SendString("Error al iniciar el proceso")
+	}
+
+	// Obtener el comando con PID
+	process = cmd
+	fmt.Println("Proceso iniciado con PID:", process.Process.Pid)
+	return c.SendString(fmt.Sprintf("Proceso iniciado con PID: %d y estado en espera", process.Process.Pid))
+}
+
+// función para eliminar un proceso mediante el pid.
+func KillProcess(c *fiber.Ctx) error {
+	var body Model.RequestBody
+	if err := c.BodyParser(&body); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Error al parsear el cuerpo de la solicitud")
+	}
+
+	pid := body.PID
+	if pid == 0 {
+		return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' es requerido y debe ser un número entero válido")
+	}
+
+	// Enviar señal SIGKILL (9) al proceso con el PID proporcionado
+	cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
+	err := cmd.Run()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
+	}
+
+	return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
+}
+
+// func KillProcess(c *fiber.Ctx) error {
+// 	pidStr := c.Query("pid")
+// 	if pidStr == "" {
+// 		return c.Status(fiber.StatusBadRequest).SendString("Se requiere el parámetro 'pid'")
+// 	}
+
+// 	pid, err := strconv.Atoi(pidStr)
+// 	if err != nil {
+// 		return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' debe ser un número entero")
+// 	}
+
+// 	// Enviar señal SIGKILL (9) al proceso con el PID proporcionado
+// 	cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
+// 	err = cmd.Run()
+// 	if err != nil {
+// 		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
+// 	}
+
+// 	return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
+// }
+
+// Función para iniciar la rutina de eliminación periódica
+func startDeletionRoutine() {
+	ticker := time.NewTicker(30 * time.Second)
+	for range ticker.C {
+		err := deleteRecords()
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println("Se han eliminado 30 registros de la base de datos.")
+		}
+	}
+}
+
+// Función para eliminar registros de la base de datos
+func deleteRecords() error {
+	// Aquí deberías implementar la lógica para eliminar 30 registros de la base de datos.
+	// Por ejemplo, puedes llamar a un método del controlador que elimine los registros.
+	err := Controller.DeleteOldRecords(30)
+	if err != nil {
+		return fmt.Errorf("Error al eliminar registros: %v", err)
+	}
+	return nil
 }

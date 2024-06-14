@@ -29,3 +29,8 @@ type Cpu struct {
 	Porcentaje int       `json:"cpu_porcentaje"`
 	Processes  []Process `json:"processes"`
 }
+
+// PID obtenido desde el front
+type RequestBody struct {
+	PID int `json:"pid"`
+}
