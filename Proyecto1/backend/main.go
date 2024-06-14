@@ -21,32 +21,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-// type Hijos struct {
-// 	PID      int    `json:"pid"`
-// 	Name     string `json:"name"`
-// 	State    int    `json:"state"`
-// 	PIDPadre int    `json:"pidPadre,omitempty"` // Se omite si está vacío.
-// }
-
-// type Process struct {
-// 	PID   int     `json:"pid"`
-// 	Name  string  `json:"name"`
-// 	State int     `json:"state"`
-// 	Child []Hijos `json:"child"`
-// }
-
-// type Cpu struct {
-// 	Porcentaje int       `json:"cpu_porcentaje"`
-// 	Processes  []Process `json:"processes"`
-// }
-
-// type Ram struct {
-// 	Total      int `json:"totalRam"`
-// 	En_uso     int `json:"memoriaEnUso"`
-// 	Libre      int `json:"libre"`
-// 	Porcentaje int `json:"porcentaje"`
-// }
-
 var process *exec.Cmd
 
 func main() {
@@ -65,7 +39,7 @@ func main() {
 	}))
 
 	// Definir rutas
-	app.Get("/cpuyram", getPOrcentajeRamyCpu)
+	app.Get("/cpuyram", getPorcentajeRamyCpu)
 	//app.Get("/cpu", getCPUInfo)
 	//app.Get("/ram", )
 	//getMem()
@@ -97,7 +71,7 @@ func getRAMdata() (int, error) {
 	return data.Porcentaje, nil
 }
 
-func getPOrcentajeRamyCpu(c *fiber.Ctx) error {
+func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 	// Obtener datos de la RAM
 	freeRAMPercentage, err := getRAMdata()
 	if err != nil {
@@ -377,16 +351,3 @@ func getCpuPercentage1() (int, error) {
 
 	return cpuPercentage, nil
 }
-
-// func getCPU(cpuInfo *Model.Process) error {
-// 	Controller.InsertData1("cpu")
-// 	PID := cpuInfo.PID
-// 	Name := cpuInfo.Name
-// 	State := cpuInfo.State
-// 	PidPadre := cpuInfo.Child[0].PID
-// 	Controller.InsertData2("cpu", PID, Name, State, PidPadre)
-// 	for _, hijo := range cpuInfo.Child {
-// 		Controller.InsertData2("cpu", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
-// 	}
-// 	return nil
-// }
