@@ -141,58 +141,6 @@ func getMem() (Model.Ram, error) {
 }
 
 // Obtener información de la CPU y mostrarla en el Frontend
-// func getCPUInfo(c *fiber.Ctx) error {
-// 	cmdCpu := exec.Command("sh", "-c", "cat /proc/cpu_so1_1s2024")
-// 	outCpu, err := cmdCpu.CombinedOutput()
-// 	if err != nil {
-// 		return c.Status(500).SendString("Error al obtener información de la CPU")
-// 	}
-
-// 	var cpuInfo Model.Cpu
-// 	err = json.Unmarshal(outCpu, &cpuInfo)
-// 	if err != nil {
-// 		return c.Status(500).SendString("Error al parsear información de la CPU")
-// 	}
-
-// 	cpuFree := exec.Command("mpstat", "1", "1")
-// 	var out bytes.Buffer
-// 	cpuFree.Stdout = &out
-// 	err = cpuFree.Run()
-// 	if err != nil {
-// 		return c.Status(500).SendString("Error al ejecutar mpstat")
-// 	}
-
-// 	output := out.String()
-// 	lines := strings.Split(output, "\n")
-// 	var idleStr string
-// 	for _, line := range lines {
-// 		if strings.Contains(line, "all") {
-// 			fields := strings.Fields(line)
-// 			if len(fields) >= 11 {
-// 				idleStr = fields[10]
-// 			}
-// 			break
-// 		}
-// 	}
-
-// 	idle, err := strconv.ParseFloat(idleStr, 64)
-// 	if err != nil {
-// 		return c.Status(500).SendString("Error al parsear el valor de %idle")
-// 	}
-
-// 	freeCPU := idle
-// 	cpuInfo.Porcentaje = 100 - int(freeCPU)
-
-// 	for _, process := range cpuInfo.Processes {
-// 		err := getCPU(&process)
-// 		if err != nil {
-// 			fmt.Println("Error:", err)
-// 		}
-// 	}
-
-// 	return c.JSON(cpuInfo)
-// }
-
 func getCPUInfo(c *fiber.Ctx) error {
 	cmdCpu := exec.Command("sh", "-c", "cat /proc/cpu_so1_1s2024")
 	outCpu, err := cmdCpu.CombinedOutput()
@@ -241,6 +189,7 @@ func getCPUInfo(c *fiber.Ctx) error {
 			fmt.Println("Error:", err)
 		}
 	}
+	getCpuPercentage("cpu%")
 
 	return c.JSON(cpuInfo)
 }
@@ -286,22 +235,59 @@ func getProcesses(processesData interface{}) ([]Model.Process, error) {
 }
 
 func getCPU(cpuInfo *Model.Process) error {
-	// Remove this line to avoid dropping the collection every time
-	// Controller.InsertData1("cpu")
-
 	PID := cpuInfo.PID
 	Name := cpuInfo.Name
 	State := cpuInfo.State
 	if len(cpuInfo.Child) > 0 {
 		PidPadre := cpuInfo.Child[0].PID
-		Controller.InsertData2("cpu", PID, Name, State, PidPadre)
+		Controller.InserProcess("cpu", PID, Name, State, PidPadre)
 		for _, hijo := range cpuInfo.Child {
-			Controller.InsertData2("cpu", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
+			Controller.InserProcess("cpu", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
 		}
 	} else {
-		Controller.InsertData2("cpu", PID, Name, State, 0)
+		Controller.InserProcess("cpu", PID, Name, State, 0)
 	}
 	return nil
+}
+
+// Función separada para obtener y almacenar el porcentaje de CPU
+func getCpuPercentage(nameCol string) (int, error) {
+	cpuFree := exec.Command("mpstat", "1", "1")
+	var out bytes.Buffer
+	cpuFree.Stdout = &out
+	err := cpuFree.Run()
+	if err != nil {
+		return 0, fmt.Errorf("error al ejecutar mpstat: %v", err)
+	}
+
+	output := out.String()
+	lines := strings.Split(output, "\n")
+	var idleStr string
+	for _, line := range lines {
+		if strings.Contains(line, "all") {
+			fields := strings.Fields(line)
+			if len(fields) >= 11 {
+				idleStr = fields[10]
+			}
+			break
+		}
+	}
+
+	idle, err := strconv.ParseFloat(idleStr, 64)
+	if err != nil {
+		return 0, fmt.Errorf("error al parsear el valor de %%idle: %v", err)
+	}
+
+	freeCPU := idle
+	cpuPercentage := 100 - int(freeCPU)
+
+	// Insertar el porcentaje de CPU en la base de datos
+	err = Controller.InsertCpu(nameCol, cpuPercentage)
+	if err != nil {
+		return 0, fmt.Errorf("error al insertar el porcentaje de CPU en la base de datos: %v", err)
+	}
+
+	return cpuPercentage, nil
 }
 
 // func getCPU(cpuInfo *Model.Process) error {

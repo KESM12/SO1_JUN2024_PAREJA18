@@ -2,7 +2,6 @@ package Controller
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"main/Instance"
 	"main/Model"
@@ -18,25 +17,30 @@ func InsertRam(nameCol string, Total int, Enuso int, Libre int, Porcentaje int) 
 	}
 }
 
-func InsertData2(nameCol string, PID int, Name string, State int, PidPadre int) {
-
+func InserProcess(nameCol string, PID int, Name string, State int, PidPadre int) {
 	collection := Instance.Mg.Db.Collection(nameCol)
-
 	doc := Model.Hijos{PID: PID, Name: Name, State: State, PIDPadre: PidPadre}
-
 	_, err := collection.InsertOne(context.TODO(), doc)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func InsertData1(nameCol string) error {
+func InsertCpu(nameCol string, Porcentaje int) error {
 	collection := Instance.Mg.Db.Collection(nameCol)
-
-	err := collection.Drop(context.TODO())
+	doc := Model.Cpu{Porcentaje: Porcentaje}
+	_, err := collection.InsertOne(context.TODO(), doc)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	fmt.Printf("en poceso de guardar datos")
 	return nil
 }
+
+// func InsertCpu(nameCol string, Porcentaje int) {
+// 	collection := Instance.Mg.Db.Collection(nameCol)
+// 	doc := Model.Cpu{Porcentaje: Porcentaje}
+// 	_, err := collection.InsertOne(context.TODO(), doc)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
