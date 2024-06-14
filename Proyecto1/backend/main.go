@@ -65,8 +65,9 @@ func main() {
 	}))
 
 	// Definir rutas
-	app.Get("/cpu", getCPUInfo)
-	app.Get("/ram", getRAMInfo)
+	app.Get("/cpuyram", getPOrcentajeRamyCpu)
+	//app.Get("/cpu", getCPUInfo)
+	//app.Get("/ram", )
 	//getMem()
 	//Routes.Setup(app)
 
@@ -77,20 +78,74 @@ func main() {
 }
 
 // Obtener información de la RAM y mostrarla en el Frontend
-func getRAMInfo(c *fiber.Ctx) error {
-	cmdRam := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
-	outRam, err := cmdRam.CombinedOutput()
+// Funcion para obtener datos de la RAM
+func getRAMdata() (int, error) {
+	cmd := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
+	stdout, err := cmd.CombinedOutput()
+
 	if err != nil {
-		return c.Status(500).SendString("Error al obtener información de la RAM")
+		return 0, err
 	}
 
-	var ramInfo Model.Ram
-	err = json.Unmarshal(outRam, &ramInfo)
+	// Convertir la salida a formato JSON
+	var data Model.Ram
+	err = json.Unmarshal(stdout, &data)
 	if err != nil {
-		return c.Status(500).SendString("Error al parsear información de la RAM")
+		return 0, err
 	}
-	getMem()
-	return c.JSON(ramInfo)
+
+	return data.Porcentaje, nil
+}
+
+func getPOrcentajeRamyCpu(c *fiber.Ctx) error {
+	// Obtener datos de la RAM
+	freeRAMPercentage, err := getRAMdata()
+	if err != nil {
+		return c.Status(500).SendString("Error al obtener datos de la RAM")
+	}
+
+	// Obtener datos de la CPU
+	usedCPUPercentage, err := getCpuPercentage1()
+	if err != nil {
+		return c.Status(500).SendString("Error al obtener datos de la CPU")
+	}
+
+	usedRAMPercentage := 100 - freeRAMPercentage
+	//freeCPUPercentage := 100 - usedCPUPercentage
+
+	estadisticas := map[string]int{
+		"ram_percentage": usedRAMPercentage,
+		"cpu_percentage": usedCPUPercentage,
+	}
+
+	return c.JSON(estadisticas)
+}
+
+// func getRAMInfo(c *fiber.Ctx) error {
+// 	cmdRam := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
+// 	outRam, err := cmdRam.CombinedOutput()
+// 	if err != nil {
+// 		return c.Status(500).SendString("Error al obtener información de la RAM")
+// 	}
+
+// 	var ramInfo Model.Ram
+// 	err = json.Unmarshal(outRam, &ramInfo)
+// 	if err != nil {
+// 		return c.Status(500).SendString("Error al parsear información de la RAM")
+// 	}
+// 	getMem()
+// 	return c.JSON(ramInfo)
+// }
+
+func eliminarProceso(c *fiber.Ctx) error {
+	pid := c.Params("pid")
+	cmd := exec.Command("sh", "-c", "kill "+pid)
+	err := cmd.Run()
+	if err != nil {
+		return c.Status(500).SendString("Error al eliminar el proceso")
+	}
+
+	return c.SendString("Proceso eliminado exitosamente")
 }
 
 // Obtener información de la RAM
@@ -286,6 +341,39 @@ func getCpuPercentage(nameCol string) (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("error al insertar el porcentaje de CPU en la base de datos: %v", err)
 	}
+
+	return cpuPercentage, nil
+}
+
+func getCpuPercentage1() (int, error) {
+	cpuFree := exec.Command("mpstat", "1", "1")
+	var out bytes.Buffer
+	cpuFree.Stdout = &out
+	err := cpuFree.Run()
+	if err != nil {
+		return 0, fmt.Errorf("error al ejecutar mpstat: %v", err)
+	}
+
+	output := out.String()
+	lines := strings.Split(output, "\n")
+	var idleStr string
+	for _, line := range lines {
+		if strings.Contains(line, "all") {
+			fields := strings.Fields(line)
+			if len(fields) >= 11 {
+				idleStr = fields[10]
+			}
+			break
+		}
+	}
+
+	idle, err := strconv.ParseFloat(idleStr, 64)
+	if err != nil {
+		return 0, fmt.Errorf("error al parsear el valor de %%idle: %v", err)
+	}
+
+	freeCPU := idle
+	cpuPercentage := 100 - int(freeCPU)
 
 	return cpuPercentage, nil
 }
