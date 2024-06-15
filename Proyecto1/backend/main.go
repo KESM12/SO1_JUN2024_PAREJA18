@@ -95,7 +95,6 @@ func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 		"cpu_percentage": usedCPUPercentage,
 	}
 	getMem()
-	// getCPUInfo(c)
 	return c.JSON(estadisticas)
 }
 
@@ -200,59 +199,24 @@ func getCPUInfo(c *fiber.Ctx) error {
 	return c.JSON(cpuInfo)
 }
 
-// func getCPUInfo1(out string) (*Model.Cpu, error) {
-// 	var cpuInfo Model.Cpu
-// 	var data map[string]interface{}
-// 	err := json.Unmarshal([]byte(out), &data)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	porcentaje, ok := data["cpu_porcentaje"]
-// 	if !ok {
-// 		return nil, fmt.Errorf("No se encontró el campo 'cpu_porcentaje'")
-// 	}
-// 	cpuInfo.Porcentaje = int(porcentaje.(float64))
-
-// 	processesData, ok := data["processes"]
-// 	if !ok {
-// 		return nil, fmt.Errorf("No se encontró el campo 'processes'")
-// 	}
-
-// 	procesos, err := getProcesses(processesData)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	cpuInfo.Processes = procesos
-// 	return &cpuInfo, nil
-// }
-
-// func getProcesses(processesData interface{}) ([]Model.Process, error) {
-// 	var procesos []Model.Process
-// 	processesJSON, err := json.Marshal(processesData)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	err = json.Unmarshal(processesJSON, &procesos)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	return procesos, nil
-// }
-
 func getCPU(cpuInfo *Model.Process) error {
+	//Controller.ResetCollection("cpu")
 	PID := cpuInfo.PID
 	Name := cpuInfo.Name
 	State := cpuInfo.State
+	var PidPadre int
 	if len(cpuInfo.Child) > 0 {
-		PidPadre := cpuInfo.Child[0].PID
-		Controller.InserProcess("cpu", PID, Name, State, PidPadre)
-		for _, hijo := range cpuInfo.Child {
-			Controller.InserProcess("cpu", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
-		}
+		PidPadre = cpuInfo.Child[0].PID
 	} else {
-		Controller.InserProcess("cpu", PID, Name, State, 0)
+		PidPadre = 0
 	}
+	Controller.InserProcess("cpu", PID, Name, State, PidPadre)
+
+	// Insertar solo los procesos hijo sin duplicar el proceso padre
+	// for _, hijo := range cpuInfo.Child {
+	// 	Controller.InserProcess("cpu", hijo.PID, hijo.Name, hijo.State, PID)
+	// }
+
 	return nil
 }
 

@@ -36,6 +36,15 @@ func InsertCpu(nameCol string, Porcentaje int) error {
 	return nil
 }
 
+func ResetCollection(nameCol string) error {
+	collection := Instance.Mg.Db.Collection(nameCol)
+	err := collection.Drop(context.TODO())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // func InsertCpu(nameCol string, Porcentaje int) {
 // 	collection := Instance.Mg.Db.Collection(nameCol)
 // 	doc := Model.Cpu{Porcentaje: Porcentaje}
