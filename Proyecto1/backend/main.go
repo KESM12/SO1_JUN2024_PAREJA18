@@ -8,13 +8,12 @@ import (
 	"main/Controller"
 	"main/Database"
 	"main/Model"
-	"time"
 
 	// "log"
 	// "main/Database"
 	"strings"
 
-	//"main/Database"
+	// "main/Database"
 	"os/exec"
 	"strconv"
 
@@ -96,7 +95,7 @@ func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 		"cpu_percentage": usedCPUPercentage,
 	}
 	getMem()
-	//getCPUInfo(c)
+	// getCPUInfo(c)
 	return c.JSON(estadisticas)
 }
 
@@ -196,51 +195,50 @@ func getCPUInfo(c *fiber.Ctx) error {
 			fmt.Println("Error:", err)
 		}
 	}
-
 	getCpuPercentage("cpu%")
 
 	return c.JSON(cpuInfo)
 }
 
-func getCPUInfo1(out string) (*Model.Cpu, error) {
-	var cpuInfo Model.Cpu
-	var data map[string]interface{}
-	err := json.Unmarshal([]byte(out), &data)
-	if err != nil {
-		return nil, err
-	}
+// func getCPUInfo1(out string) (*Model.Cpu, error) {
+// 	var cpuInfo Model.Cpu
+// 	var data map[string]interface{}
+// 	err := json.Unmarshal([]byte(out), &data)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	porcentaje, ok := data["cpu_porcentaje"]
-	if !ok {
-		return nil, fmt.Errorf("No se encontró el campo 'cpu_porcentaje'")
-	}
-	cpuInfo.Porcentaje = int(porcentaje.(float64))
+// 	porcentaje, ok := data["cpu_porcentaje"]
+// 	if !ok {
+// 		return nil, fmt.Errorf("No se encontró el campo 'cpu_porcentaje'")
+// 	}
+// 	cpuInfo.Porcentaje = int(porcentaje.(float64))
 
-	processesData, ok := data["processes"]
-	if !ok {
-		return nil, fmt.Errorf("No se encontró el campo 'processes'")
-	}
+// 	processesData, ok := data["processes"]
+// 	if !ok {
+// 		return nil, fmt.Errorf("No se encontró el campo 'processes'")
+// 	}
 
-	procesos, err := getProcesses(processesData)
-	if err != nil {
-		return nil, err
-	}
-	cpuInfo.Processes = procesos
-	return &cpuInfo, nil
-}
+// 	procesos, err := getProcesses(processesData)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	cpuInfo.Processes = procesos
+// 	return &cpuInfo, nil
+// }
 
-func getProcesses(processesData interface{}) ([]Model.Process, error) {
-	var procesos []Model.Process
-	processesJSON, err := json.Marshal(processesData)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(processesJSON, &procesos)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return procesos, nil
-}
+// func getProcesses(processesData interface{}) ([]Model.Process, error) {
+// 	var procesos []Model.Process
+// 	processesJSON, err := json.Marshal(processesData)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	err = json.Unmarshal(processesJSON, &procesos)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	return procesos, nil
+// }
 
 func getCPU(cpuInfo *Model.Process) error {
 	PID := cpuInfo.PID
@@ -250,10 +248,10 @@ func getCPU(cpuInfo *Model.Process) error {
 		PidPadre := cpuInfo.Child[0].PID
 		Controller.InserProcess("cpu", PID, Name, State, PidPadre)
 		for _, hijo := range cpuInfo.Child {
-			Controller.InserProcess("cpu1", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
+			Controller.InserProcess("cpu", hijo.PID, hijo.Name, hijo.State, hijo.PIDPadre)
 		}
 	} else {
-		Controller.InserProcess("cpu2", PID, Name, State, 0)
+		Controller.InserProcess("cpu", PID, Name, State, 0)
 	}
 	return nil
 }
@@ -371,46 +369,22 @@ func KillProcess(c *fiber.Ctx) error {
 }
 
 // func KillProcess(c *fiber.Ctx) error {
-// 	pidStr := c.Query("pid")
-// 	if pidStr == "" {
-// 		return c.Status(fiber.StatusBadRequest).SendString("Se requiere el parámetro 'pid'")
-// 	}
-
-// 	pid, err := strconv.Atoi(pidStr)
-// 	if err != nil {
-// 		return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' debe ser un número entero")
-// 	}
-
-// 	// Enviar señal SIGKILL (9) al proceso con el PID proporcionado
-// 	cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
-// 	err = cmd.Run()
-// 	if err != nil {
-// 		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
-// 	}
-
-// 	return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
+// pidStr := c.Query("pid")
+// if pidStr == "" {
+// return c.Status(fiber.StatusBadRequest).SendString("Se requiere el parámetro 'pid'")
 // }
 
-// Función para iniciar la rutina de eliminación periódica
-func startDeletionRoutine() {
-	ticker := time.NewTicker(30 * time.Second)
-	for range ticker.C {
-		err := deleteRecords()
-		if err != nil {
-			log.Println(err)
-		} else {
-			log.Println("Se han eliminado 30 registros de la base de datos.")
-		}
-	}
-}
+// pid, err := strconv.Atoi(pidStr)
+// if err != nil {
+// return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' debe ser un número entero")
+// }
 
-// Función para eliminar registros de la base de datos
-func deleteRecords() error {
-	// Aquí deberías implementar la lógica para eliminar 30 registros de la base de datos.
-	// Por ejemplo, puedes llamar a un método del controlador que elimine los registros.
-	err := Controller.DeleteOldRecords(30)
-	if err != nil {
-		return fmt.Errorf("Error al eliminar registros: %v", err)
-	}
-	return nil
-}
+// // Enviar señal SIGKILL (9) al proceso con el PID proporcionado
+// cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
+// err = cmd.Run()
+// if err != nil {
+// return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
+// }
+
+// return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
+// }
