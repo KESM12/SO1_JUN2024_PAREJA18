@@ -95,6 +95,7 @@ func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 		"cpu_percentage": usedCPUPercentage,
 	}
 	getMem()
+	getCpuPercentage("cpu%")
 	return c.JSON(estadisticas)
 }
 
@@ -187,7 +188,7 @@ func getCPUInfo(c *fiber.Ctx) error {
 
 	freeCPU := idle
 	cpuInfo.Porcentaje = 100 - int(freeCPU)
-
+	Controller.ResetCollection("cpu")
 	for _, process := range cpuInfo.Processes {
 		err := getCPU(&process)
 		if err != nil {
@@ -311,44 +312,44 @@ func StartProcess(c *fiber.Ctx) error {
 }
 
 // función para eliminar un proceso mediante el pid.
+// func KillProcess(c *fiber.Ctx) error {
+// 	var body Model.RequestBody
+// 	if err := c.BodyParser(&body); err != nil {
+// 		return c.Status(fiber.StatusBadRequest).SendString("Error al parsear el cuerpo de la solicitud")
+// 	}
+
+// 	pid := body.PID
+// 	if pid == 0 {
+// 		return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' es requerido y debe ser un número entero válido")
+// 	}
+
+// 	// Enviar señal SIGKILL (9) al proceso con el PID proporcionado
+// 	cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
+// 	err := cmd.Run()
+// 	if err != nil {
+// 		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
+// 	}
+
+// 	return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
+// }
+
 func KillProcess(c *fiber.Ctx) error {
-	var body Model.RequestBody
-	if err := c.BodyParser(&body); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Error al parsear el cuerpo de la solicitud")
+	pidStr := c.Query("pid")
+	if pidStr == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Se requiere el parámetro 'pid'")
 	}
 
-	pid := body.PID
-	if pid == 0 {
-		return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' es requerido y debe ser un número entero válido")
+	pid, err := strconv.Atoi(pidStr)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' debe ser un número entero")
 	}
 
 	// Enviar señal SIGKILL (9) al proceso con el PID proporcionado
 	cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
 	}
 
 	return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
 }
-
-// func KillProcess(c *fiber.Ctx) error {
-// pidStr := c.Query("pid")
-// if pidStr == "" {
-// return c.Status(fiber.StatusBadRequest).SendString("Se requiere el parámetro 'pid'")
-// }
-
-// pid, err := strconv.Atoi(pidStr)
-// if err != nil {
-// return c.Status(fiber.StatusBadRequest).SendString("El parámetro 'pid' debe ser un número entero")
-// }
-
-// // Enviar señal SIGKILL (9) al proceso con el PID proporcionado
-// cmd := exec.Command("kill", "-9", strconv.Itoa(pid))
-// err = cmd.Run()
-// if err != nil {
-// return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("Error al intentar terminar el proceso con PID %d", pid))
-// }
-
-// return c.SendString(fmt.Sprintf("Proceso con PID %d ha terminado", pid))
-// }
