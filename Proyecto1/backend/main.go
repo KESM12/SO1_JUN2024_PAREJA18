@@ -41,8 +41,8 @@ func main() {
 	// Definir rutas
 	app.Get("/cpuyram", getPorcentajeRamyCpu)
 	app.Get("/cpu", getCPUInfo)
-	app.Get("/iniProc", StartProcess)
-	app.Post("/killProc", KillProcess)
+	app.Get("cpu/iniProc/crear", StartProcess)
+	app.Post("cpu/killProc?pid=", KillProcess)
 	//startDeletionRoutine()
 
 	//app.Get("/ram", )
