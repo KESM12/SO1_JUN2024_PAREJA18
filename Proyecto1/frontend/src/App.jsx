@@ -1,7 +1,7 @@
 import './styles/App.css'
 import Head from "./components/Encabezado"
 import RealTimeCharts from './components/Graficas'
-import TablaProcesos from './components/procesos'
+import ProcessTable from './components/procesos'
 
 
 function App() {
@@ -10,11 +10,11 @@ function App() {
     case "/":
       component = <RealTimeCharts />
       break;
-    case "/cpuyram":
-      component = <RealTimeCharts />
-      break;
+    // case "/cpuyram":
+    //   component = <RealTimeCharts />
+      // break;
     case "/cpu":
-      component = <TablaProcesos />
+      component = <ProcessTable />
       break;
     default:
   }

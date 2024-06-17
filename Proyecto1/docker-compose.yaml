@@ -2,11 +2,11 @@ version: '3'
 
 services:
   database:
-    image: mongo
+    image: mongo:latest
     container_name: mongo-container
     restart: always
     environment:
-      - MONGO_INITDB_DATABSE=DB
+      - MONGO_INITDB_DATABASE=DB
     volumes:
       - mongo-data:/data/db
     ports:
@@ -14,9 +14,7 @@ services:
 
   backend:
     image: kesm12/backend:latest
-    privileged: true
-    pid: host
-    container_name: backend_container
+    container_name: backend-container
     environment:
       - DB_HOST=database
       - DB_PORT=27017
@@ -24,47 +22,72 @@ services:
     ports:
       - '3000:3000'
     volumes:
-     - type: bind
-       source: /proc
-       target: /proc
+      - type: bind
+        source: /proc
+        target: /proc
     restart: always
     depends_on:
       - database
-    links:
-      - database
 
-  #frontend:
-    #image: jdveloper/so1_front_jun2024
-    #container_name: front_container
-    #ports:
-      #- '5173:5173'
-    #restart: always
-    #depends_on:
-      #- backend
-    #links:
-      #- backend
+  frontend:
+    image: kems12/frontend:latest
+    container_name: frontend-container
+    ports:
+      - '80:80'
+    restart: always
+    depends_on:
+      - backend
 
 volumes:
   mongo-data:
     external: false
-# version: "3.8"
+
+# version: '3'
 
 # services:
-#   mongodb:
-#     image: mongo:latest
-#     container_name: MongoDB
+#   database:
+#     image: mongo
+#     container_name: mongo-container
 #     restart: always
-#     ports:
-#       - "27017:27017"
+#     environment:
+#       - MONGO_INITDB_DATABSE=DB
 #     volumes:
 #       - mongo-data:/data/db
+#     ports:
+#       - '27017:27017'
 
 #   backend:
-#     build: .
-#     container_name: backend
-#     restart: always
+#     image: kesm12/backend:latest
+#     privileged: true
+#     pid: host
+#     container_name: backend_container
+#     environment:
+#       - DB_HOST=database
+#       - DB_PORT=27017
+#       - DB_NAME=DB
 #     ports:
-#       - "3000:3000"  
-      
+#       - '3000:3000'
+#     volumes:
+#      - type: bind
+#        source: /proc
+#        target: /proc
+#     restart: always
+#     depends_on:
+#       - database
+#     links:
+#       - database
+
+#   frontend:
+#     image: kems12/frontend:latest
+#     container_name: front_container
+#     ports:
+#       - '80:80'
+#     restart: always
+#     depends_on:
+#       - backend
+#     links:
+#       - backend
+
 # volumes:
 #   mongo-data:
+#     external: false

@@ -12,7 +12,7 @@ function RealTimeCharts() {
   useEffect(() => {
     const fetchUsageData = () => {
       // Fetch data from the API
-      fetch('http://192.168.122.15:3000/cpuyram') // Reemplaza con tu endpoint real
+      fetch('http://192.168.122.210:3000/cpuyram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
         .then(response => response.json())
         .then(data => {
           setCpuUsage(data.cpu_percentage);

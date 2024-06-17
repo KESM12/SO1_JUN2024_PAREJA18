@@ -12,7 +12,7 @@ function ProcessTable() {
   const [searchMode, setSearchMode] = useState('name');
 
   const fetchProcesses = () => {
-    fetch('http://192.168.122.15:3000/cpu')
+    fetch('http://192.168.122.210:3000/cpu') // Quite la ip y coloque localhost para validar si jalaba o no.
       .then(response => response.json())
       .then(data => {
         if (data && data.processes) {
