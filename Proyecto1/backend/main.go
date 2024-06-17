@@ -128,9 +128,9 @@ func getMem() (Model.Ram, error) {
 	porcentaje := ramInfo.Porcentaje
 
 	// convertir los valores de bytes a MB
-	total = total / (1024 * 2)
-	enUso = enUso / (1024 * 2)
-	libre = libre / (1024 * 2)
+	total = total / (2048)
+	enUso = enUso / (2048)
+	libre = libre / (2048)
 	DbTotal := total
 	DbEnUso := enUso
 	Dblibre := libre

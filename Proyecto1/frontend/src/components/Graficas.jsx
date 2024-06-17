@@ -8,11 +8,12 @@ import '../styles/Estilo.css'; // Asegúrate de crear este archivo para los esti
 function RealTimeCharts() {
   const [cpuUsage, setCpuUsage] = useState(null);
   const [ramUsage, setRamUsage] = useState(null);
+  const url = "/back"; // Cambiar por la URL de tu API
 
   useEffect(() => {
     const fetchUsageData = () => {
       // Fetch data from the API
-      fetch('http://192.168.122.210:3000/cpuyram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
+      fetch(url + 'cpuyram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
         .then(response => response.json())
         .then(data => {
           setCpuUsage(data.cpu_percentage);

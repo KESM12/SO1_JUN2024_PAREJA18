@@ -5,6 +5,7 @@ import ProcessTable from './components/procesos'
 
 
 function App() {
+  
   let component
   switch (window.location.pathname) {
     case "/":
