@@ -3,6 +3,8 @@ import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto'; // Importación automática de los componentes de Chart.js
 import '../styles/Estilo.css'; // Asegúrate de crear este archivo para los estilos
 
+// Aqui se grafica el uso de CPU y RAM en tiempo real
+
 function RealTimeCharts() {
   const [cpuUsage, setCpuUsage] = useState(null);
   const [ramUsage, setRamUsage] = useState(null);
