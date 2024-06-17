@@ -1,0 +1,49 @@
+/* Barra.css */
+
+.Container{
+  background-color: #000000;
+}
+.navbar {
+    width: 100%;
+    background-color: #fcfafa;
+    border-bottom: 1px solid #f8f8f8;
+    padding: 20px 20px;
+    margin-bottom: 20px;
+    
+  }
+  
+/* Fondo de la barra de navegación */
+.navbar-custom {
+    background-color: #000000; /* Cambia este color según tus preferencias */
+  }
+  
+  /* Color del texto de la marca */
+  .navbar-custom .navbar-brand {
+    color: #010101; /* Cambia este color según tus preferencias */
+  }
+  
+  /* Color del texto de la marca al pasar el mouse */
+  .navbar-custom .navbar-brand:hover {
+    color: #000000; /* Cambia este color según tus preferencias */
+  }
+  
+  /* Color del texto de los enlaces */
+  .navbar-custom .nav-link {
+    color: #000000; /* Cambia este color según tus preferencias */
+  }
+  
+  /* Color del texto de los enlaces al pasar el mouse */
+  .navbar-custom .nav-link:hover {
+    color: #030a0b; /* Cambia este color según tus preferencias */
+  }
+  
+  /* Color del borde del toggler */
+  .navbar-custom .navbar-toggler {
+    border-color: #000000; /* Cambia este color según tus preferencias */
+  }
+  
+  /* Color del icono del toggler */
+  .navbar-custom .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28 255, 255, 255, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Cambia este color según tus preferencias */
+  }
+  

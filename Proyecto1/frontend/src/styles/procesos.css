@@ -1,0 +1,80 @@
+/* Contenedor Principal */
+.process-table-container {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Título */
+.title-container h3 {
+  color: #000000;
+  margin-bottom: 5px;
+}
+
+/* Botones */
+.button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px; /* Añade espacio entre los botones */
+}
+
+/* Tabla */
+.table th, .table td, .no-border-table td, .horizontal-table td {
+  border: 1px solid #ddd;
+  padding: 16px; /* Aumenta el padding */
+  text-align: left;
+}
+
+/* Alertas */
+.alert-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #bc3e0c;
+  color: white;
+  padding: 15px;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+  margin-top: 25px; /* Añade margen superior para separar del contenedor de formularios */
+  max-height: 300px; /* Altura máxima del contenedor */
+  overflow-y: auto; /* Scroll vertical si es necesario */
+  scrollbar-width: thin; /* Grosor del scrollbar */
+  scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.1); /* Color del scrollbar */
+}
+
+/* Tamaño mínimo de la tabla */
+.table {
+  min-width: 1000px; /* Ancho mínimo de la tabla */
+  min-height: 20px; /* Altura mínima de la tabla */
+}
+
+.action-buttons {
+  display: flex;
+  gap: 25px; /* Añade espacio entre los botones */
+  justify-content: center; /* Centra los botones horizontalmente */
+  margin-top: 20px; /* Añade espacio superior si es necesario */
+}
+
+.action-buttons .btn-danger {
+  background-color: #6E6E6E; /* Cambia el color de fondo del botón "Matar Proceso" */
+  border-color: #6E6E6E; /* Cambia el color del borde del botón "Matar Proceso" */
+}
+
+.action-buttons .btn-success {
+  background-color: #BAFF39; /* Cambia el color de fondo del botón "Crear Proceso" */
+  border-color: #BAFF39; /* Cambia el color del borde del botón "Crear Proceso" */
+}
+
+/* Estilos adicionales para los botones */
+.action-buttons .btn {
+  color: #fff; /* Cambia el color del texto a blanco */
+  padding: 10px 20px; /* Ajusta el relleno del botón */
+  font-size: 16px; /* Cambia el tamaño de la fuente */
+  border-radius: 5px; /* Añade bordes redondeados */
+}

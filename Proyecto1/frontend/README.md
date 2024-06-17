@@ -1,8 +1,6 @@
-# React + Vite
+# vite-react-boostrap
+![](Captura.jpg)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# ¿Qué es esto? 🤔
++ Esta es una plantilla de <a href="https://vitejs.dev" target="_blank">**Vite**</a> que utliza el plugin de **React** y **Bootstrap**. Esta plantilla está pensada para aquellos desarrolladores que utilizan el framework de **Bootstrap** para sus desarrollos.
++ Incluye un script para **actualizar las dependencias**, usando el comando <code>npm run update</code>.
