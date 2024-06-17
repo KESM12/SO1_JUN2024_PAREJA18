@@ -10,9 +10,10 @@ function ProcessTable() {
   const [systemInfo, setSystemInfo] = useState({});
   const [targetPid, setTargetPid] = useState('');
   const [searchMode, setSearchMode] = useState('name');
+  const url = "/back"; // Cambiar por la URL de tu API
 
   const fetchProcesses = () => {
-    fetch('http://192.168.122.210:3000/cpu') // Quite la ip y coloque localhost para validar si jalaba o no.
+    fetch(url + '/cpu') // Quite la ip y coloque localhost para validar si jalaba o no.
       .then(response => response.json())
       .then(data => {
         if (data && data.processes) {
@@ -39,7 +40,7 @@ function ProcessTable() {
   };
 
   const handleCreateProcess = () => {
-    fetch('http://192.168.122.15:3000/cpu/iniProc/crear', {
+    fetch(url + '/cpu/iniProc/crear', { //fetch(url + 'cpuyram')
       method: 'GET',
     }).then(() => {
       fetchProcesses();
@@ -48,7 +49,7 @@ function ProcessTable() {
   };
 
   const handleKillProcess = () => {
-    fetch(`http://192.168.122.15:3000/cpu/killProc?pid=${targetPid}`, {
+    fetch(url + `/cpu/killProc?pid=${targetPid}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -76,7 +77,7 @@ function ProcessTable() {
 
     setTimeout(() => {
       alertContainer.remove();
-    }, 3000);
+    }, 1000);
   };
 
   const getStateText = (state) => {

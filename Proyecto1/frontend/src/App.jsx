@@ -11,9 +11,9 @@ function App() {
     case "/":
       component = <RealTimeCharts />
       break;
-    // case "/cpuyram":
-    //   component = <RealTimeCharts />
-      // break;
+    case "/cpuyram":
+      component = <RealTimeCharts />
+      break;
     case "/cpu":
       component = <ProcessTable />
       break;

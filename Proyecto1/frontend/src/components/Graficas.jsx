@@ -13,7 +13,7 @@ function RealTimeCharts() {
   useEffect(() => {
     const fetchUsageData = () => {
       // Fetch data from the API
-      fetch(url + 'cpuyram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
+      fetch(url + '/cpuyram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
         .then(response => response.json())
         .then(data => {
           setCpuUsage(data.cpu_percentage);
@@ -27,7 +27,7 @@ function RealTimeCharts() {
 
     const interval = setInterval(() => {
       fetchUsageData(); // Realiza una llamada cada 2 segundos
-    }, 2000);
+    }, 500);
 
     return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
   }, []);
