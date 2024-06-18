@@ -51,19 +51,3 @@ func Connect() error {
 func Ping() error {
 	return Mg.Ping(context.TODO(), nil)
 }
-
-// package Database
-
-// import (
-// 	"context"
-// 	"log"
-// 	"main/Instance"
-// 	"os"
-// 	"time"
-
-// 	"github.com/joho/godotenv"
-// 	"go.mongodb.org/mongo-driver/mongo"
-// 	"go.mongodb.org/mongo-driver/mongo/options"
-// )
-
-// f

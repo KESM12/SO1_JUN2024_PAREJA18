@@ -1,0 +1,21 @@
+// Obtener información de la RAM y mostrarla en el Frontend
+func getRAMdata() (int, error) {
+	cmd := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
+	stdout, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return 0, err
+	}
+
+	// Convertir la salida a formato JSON
+	var data Model.Ram
+	err = json.Unmarshal(stdout, &data)
+	if err != nil {
+		return 0, err
+	}
+
+	return data.Porcentaje, nil
+}
+
+
+//freeRAMPercentage, err := getRAMdata()

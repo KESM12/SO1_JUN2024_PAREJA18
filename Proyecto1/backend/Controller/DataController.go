@@ -5,7 +5,6 @@ import (
 	"log"
 	"main/Instance"
 	"main/Model"
-	//"github.com/gofiber/fiber/v2"
 )
 
 func InsertRam(nameCol string, Total int, Enuso int, Libre int, Porcentaje int) {
@@ -44,12 +43,3 @@ func ResetCollection(nameCol string) error {
 	}
 	return nil
 }
-
-// func InsertCpu(nameCol string, Porcentaje int) {
-// 	collection := Instance.Mg.Db.Collection(nameCol)
-// 	doc := Model.Cpu{Porcentaje: Porcentaje}
-// 	_, err := collection.InsertOne(context.TODO(), doc)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
