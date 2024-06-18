@@ -7,7 +7,7 @@ import (
 	"main/Model"
 )
 
-func InsertRam(nameCol string, Total int, Enuso int, Libre int, Porcentaje int) {
+func InsertRam(nameCol string, Total float64, Enuso float64, Libre float64, Porcentaje int) {
 	collection := Instance.Mg.Db.Collection(nameCol)
 	doc := Model.Ram{Total: Total, En_uso: Enuso, Libre: Libre, Porcentaje: Porcentaje}
 	_, err := collection.InsertOne(context.TODO(), doc)

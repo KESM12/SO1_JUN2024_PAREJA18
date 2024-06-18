@@ -2,10 +2,10 @@ package Model
 
 // Define la estructura de la memoria RAM
 type Ram struct {
-	Total      int `json:"totalRam"`
-	En_uso     int `json:"memoriaEnUso"`
-	Libre      int `json:"libre"`
-	Porcentaje int `json:"porcentaje"`
+	Total      float64 `json:"totalRam"`
+	En_uso     float64 `json:"memoriaEnUso"`
+	Libre      float64 `json:"libre"`
+	Porcentaje int     `json:"porcentaje"`
 }
 
 // Process representa un proceso individual.

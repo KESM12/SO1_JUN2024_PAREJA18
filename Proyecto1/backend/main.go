@@ -34,15 +34,32 @@ func main() {
 	}))
 
 	// Definir rutas
-	app.Get("/", getPorcentajeRamyCpu)
+	app.Get("/cpuyram", getPorcentajeRamyCpu)
 	app.Get("/cpu", getCPUInfo)
 	app.Get("/cpu/iniProc/crear", StartProcess)
 	app.Post("/cpu/killProc", KillProcess)
+	app.Get("/ram", getRAMdata)
 
 	// Iniciar el servidor
 	if err := app.Listen(":3000"); err != nil {
 		fmt.Println("Error en el servidor")
 	}
+}
+
+// Obtener datos de la RAM y mostrarlos en el Frontend
+func getRAMdata(c *fiber.Ctx) error {
+	ramInfo := exec.Command("sh", "-c", "cat /proc/ram_so1_jun2024")
+	outCpu, err := ramInfo.CombinedOutput()
+	if err != nil {
+		return c.Status(500).SendString("Error al obtener información de la CPU")
+	}
+	var cpuInfo Model.Ram
+	err = json.Unmarshal(outCpu, &cpuInfo)
+	if err != nil {
+		return c.Status(500).SendString("Error al parsear información de la CPU")
+	}
+
+	return c.JSON(cpuInfo)
 }
 
 // Obtener porcentajes de RAM y CPU y mostrarlos en el Frontend
@@ -93,19 +110,19 @@ func getMem() (Model.Ram, error) {
 	if err != nil {
 		return Model.Ram{}, err
 	}
-	total := ramInfo.Total
-	enUso := ramInfo.En_uso
-	libre := ramInfo.Libre
+	total := float64(ramInfo.Total)
+	enUso := float64(ramInfo.En_uso)
+	libre := float64(ramInfo.Libre)
 	porcentaje := ramInfo.Porcentaje
 
 	// convertir los valores de bytes a MB
-	total = total / 2048
-	enUso = enUso / 2048
-	libre = libre / 2048
+	total = total / 1073741824
+	enUso = enUso / 1073741824
+	libre = libre / 1073741824
 	DbTotal := total
 	DbEnUso := enUso
 	Dblibre := libre
-	DbPorcentaje := porcentaje
+	DbPorcentaje := 100 - porcentaje
 
 	Controller.InsertRam("ram", DbTotal, DbEnUso, Dblibre, DbPorcentaje)
 
