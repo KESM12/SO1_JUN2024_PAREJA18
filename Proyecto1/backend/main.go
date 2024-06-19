@@ -11,12 +11,14 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"sync/atomic"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 var process *exec.Cmd
+var callCount int32
 
 func main() {
 	app := fiber.New()
@@ -64,6 +66,8 @@ func getRAMdata(c *fiber.Ctx) error {
 
 // Obtener porcentajes de RAM y CPU y mostrarlos en el Frontend
 func getPorcentajeRamyCpu(c *fiber.Ctx) error {
+	// Incrementar el contador de llamadas
+	currentCount := atomic.AddInt32(&callCount, 1)
 	// Obtener datos de la RAM
 	ramInfo, err := getRAMInfo()
 	if err != nil {
@@ -81,8 +85,14 @@ func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 		"ram_percentage": ramUsada,
 		"cpu_percentage": usedCPUPercentage,
 	}
-	getMem()
-	getCpuPercentage("cpu%")
+	// Solo llamar a getMem y getCpuPercentage después de 50 llamadas
+	if currentCount >= 20 {
+		getMem()
+		getCpuPercentage("cpu%")
+		atomic.StoreInt32(&callCount, 0)
+	}
+	// getMem()
+	// getCpuPercentage("cpu%")
 	return c.JSON(estadisticas)
 }
 
