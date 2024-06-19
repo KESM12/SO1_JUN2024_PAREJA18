@@ -6,8 +6,8 @@ import '../styles/Estilo.css'; // Asegúrate de crear este archivo para los esti
 // Aqui se grafica el uso de CPU y RAM en tiempo real
 
 function RealTimeCharts() {
-  const [cpuUsage, setCpuUsage] = useState(null);
-  const [ramUsage, setRamUsage] = useState(null);
+  const [cpuUsage, setCpuUsage] = useState(0);
+  const [ramUsage, setRamUsage] = useState(0);
   const url = "/back"; // Cambiar por la URL de tu API
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function RealTimeCharts() {
     fetchUsageData(); // Realiza la primera llamada
 
     const interval = setInterval(() => {
-      fetchUsageData(); // Realiza una llamada cada 2 segundos
+      fetchUsageData(); // Realiza dos llamadas por cada segundo
     }, 500);
 
     return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
