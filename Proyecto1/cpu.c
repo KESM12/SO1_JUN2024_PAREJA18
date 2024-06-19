@@ -1,0 +1,119 @@
+#include <linux/module.h> // THIS_MODULE, MODULE_VERSION, ...
+#include <linux/init.h>   // module_{init,exit}
+#include <linux/proc_fs.h>
+#include <linux/sched/signal.h> // for_each_process()
+#include <linux/seq_file.h>
+#include <linux/fs.h>
+#include <linux/sched.h>
+#include <linux/kernel_stat.h> // kcpustat, cpustat_cpu
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("KESM -- MC");
+MODULE_DESCRIPTION("Informacion de procesos");
+MODULE_VERSION("1.0");
+
+struct task_struct *task;       // sched.h para tareas/procesos
+struct task_struct *task_child; // index de tareas secundarias
+struct list_head *list;         // lista de cada tarea
+
+static int escribir_a_proc(struct seq_file *file_proc, void *v)
+{
+    int running = 0;
+    int sleeping = 0;
+    int zombie = 0;
+    int stopped = 0;
+    int b = 0;  // Declaración al inicio
+
+    seq_printf(file_proc, "{\n\"processes\":[\n");
+
+    for_each_process(task)
+    {
+        if (b == 0)
+        {
+            seq_printf(file_proc, "{");
+            b = 1;
+        }
+        else
+        {
+            seq_printf(file_proc, ",{");
+        }
+        seq_printf(file_proc, "\"pid\":%d,\n", task->pid);
+        seq_printf(file_proc, "\"name\":\"%s\",\n", task->comm);
+        seq_printf(file_proc, "\"state\":%d,\n", task->__state);  // Cambiado a %d
+
+        seq_printf(file_proc, "\"child\":[\n");
+        int a = 0;  // Declaración al inicio
+        list_for_each(list, &(task->children))
+        {
+            task_child = list_entry(list, struct task_struct, sibling);
+            if (a != 0)
+            {
+                seq_printf(file_proc, ",{");
+            }
+            else
+            {
+                seq_printf(file_proc, "{");
+                a = 1;
+            }
+            seq_printf(file_proc, "\"pid\":%d,\n", task_child->pid);
+            seq_printf(file_proc, "\"name\":\"%s\",\n", task_child->comm);
+            seq_printf(file_proc, "\"state\":%d,\n", task_child->__state);  // Cambiado a %d
+            seq_printf(file_proc, "\"pidPadre\":%d\n", task->pid);
+            seq_printf(file_proc, "}\n");
+        }
+        seq_printf(file_proc, "\n]");
+        
+        if (task->__state == TASK_RUNNING)
+        {
+            running += 1;
+        }
+        else if (task->__state == TASK_INTERRUPTIBLE || task->__state == TASK_UNINTERRUPTIBLE)
+        {
+            sleeping += 1;
+        }
+        else if (task->__state == TASK_STOPPED || task->__state == TASK_TRACED)
+        {
+            stopped += 1;
+        }
+        else if (task->__state == EXIT_ZOMBIE || task->__state == EXIT_DEAD)
+        {
+            zombie += 1;
+        }
+        seq_printf(file_proc, "}\n");
+    }
+    seq_printf(file_proc, "],\n");
+    seq_printf(file_proc, "\"running\":%d,\n", running);
+    seq_printf(file_proc, "\"sleeping\":%d,\n", sleeping);
+    seq_printf(file_proc, "\"zombie\":%d,\n", zombie);
+    seq_printf(file_proc, "\"stopped\":%d,\n", stopped);
+    seq_printf(file_proc, "\"total\":%d\n", running + sleeping + zombie + stopped);
+    seq_printf(file_proc, "}\n");
+
+    return 0;
+}
+
+static int abrir_aproc(struct inode *inode, struct file *file)
+{
+    return single_open(file, escribir_a_proc, NULL);
+}
+
+static struct proc_ops archivo_operaciones = {
+    .proc_open = abrir_aproc,
+    .proc_read = seq_read
+};
+
+static int __init modulo_init(void)
+{
+    proc_create("cpu_so1_1s2024", 0, NULL, &archivo_operaciones);
+    printk(KERN_INFO "Insertar Modulo CPU\n");
+    return 0;
+}
+
+static void __exit modulo_cleanup(void)
+{
+    remove_proc_entry("cpu_so1_1s2024", NULL);
+    printk(KERN_INFO "Remover Modulo CPU\n");
+}
+
+module_init(modulo_init);
+module_exit(modulo_cleanup);
