@@ -6,17 +6,37 @@ import '../styles/Estilo.css'; // Asegúrate de crear este archivo para los esti
 // Aqui se grafica el uso de CPU y RAM en tiempo real
 
 function RealTimeCharts() {
-  const [cpuUsage, setCpuUsage] = useState(0);
-  const [ramUsage, setRamUsage] = useState(0);
+  const [cpuUsage, setCpuUsage] = useState(null);
+  const [ramUsage, setRamUsage] = useState(null);
   const url = "/back"; // Cambiar por la URL de tu API
 
   useEffect(() => {
     const fetchUsageData = () => {
       // Fetch data from the API
-      fetch(url + '/cpuyram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
+      fetch(url + '/cpuyram/cpu') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
         .then(response => response.json())
         .then(data => {
           setCpuUsage(data.cpu_percentage);
+          console.log('Datos recibidos:', data); // Imprimir en la consola
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    };
+
+    fetchUsageData(); // Realiza la primera llamada
+
+    const interval = setInterval(() => {
+      fetchUsageData(); // Realiza dos llamadas por cada segundo
+    }, 500);
+
+    return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
+  }, []);
+
+  useEffect(() => {
+    const fetchUsageData = () => {
+      // Fetch data from the API
+      fetch(url + '/cpuyram/ram') // Reemplaza con tu endpoint real // Quite la ip y coloque localhost para validar si jalaba o no.
+        .then(response => response.json())
+        .then(data => {
           setRamUsage(data.ram_percentage);
           console.log('Datos recibidos:', data); // Imprimir en la consola
         })

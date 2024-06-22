@@ -18,7 +18,8 @@ import (
 )
 
 var process *exec.Cmd
-var callCount int32
+var callCountRam int32
+var callCountCpu int32
 
 func main() {
 	app := fiber.New()
@@ -36,7 +37,9 @@ func main() {
 	}))
 
 	// Definir rutas
-	app.Get("/cpuyram", getPorcentajeRamyCpu)
+	app.Get("/cpuyram", getPorcentajeRamyCpu) //getPorcentajeRamyCpu
+	app.Get("/cpuyram/ram", getPorcentajeRam)
+	app.Get("/cpuyram/cpu", getPorcentajeCpu)
 	app.Get("/cpu", getCPUInfo)
 	app.Get("/cpu/iniProc/crear", StartProcess)
 	app.Post("/cpu/killProc", KillProcess)
@@ -64,10 +67,47 @@ func getRAMdata(c *fiber.Ctx) error {
 	return c.JSON(cpuInfo)
 }
 
+// Función para mandar el porcentaje de la RAM al frontend
+func getPorcentajeRam(c *fiber.Ctx) error {
+	currentCount := atomic.AddInt32(&callCountRam, 1)
+	ramInfo, err := getRAMInfo()
+	if err != nil {
+		return c.Status(500).SendString("Error al obtener datos de la RAM")
+	}
+	ramUsada := ramInfo.Porcentaje
+	estadisticas := map[string]int{
+		"ram_percentage": ramUsada,
+	}
+	if currentCount >= 14 {
+		getMem()
+		atomic.StoreInt32(&callCountRam, 0)
+	}
+	return c.JSON(estadisticas)
+
+}
+
+// Función para mandar el porcentaje de la CPU al frontend
+func getPorcentajeCpu(c *fiber.Ctx) error {
+	currentCount := atomic.AddInt32(&callCountCpu, 1)
+	usedCPUPercentage, err := getCpuPercentage1()
+	if err != nil {
+		return c.Status(500).SendString("Error al obtener datos de la CPU")
+	}
+	estadisticas := map[string]int{
+		"cpu_percentage": usedCPUPercentage,
+	}
+	if currentCount >= 14 {
+		getCpuPercentage("cpu%")
+		atomic.StoreInt32(&callCountCpu, 0)
+	}
+	return c.JSON(estadisticas)
+
+}
+
 // Obtener porcentajes de RAM y CPU y mostrarlos en el Frontend
 func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 	// Incrementar el contador de llamadas
-	currentCount := atomic.AddInt32(&callCount, 1)
+	//currentCount := atomic.AddInt32(&callCount, 1)
 	// Obtener datos de la RAM
 	ramInfo, err := getRAMInfo()
 	if err != nil {
@@ -86,11 +126,11 @@ func getPorcentajeRamyCpu(c *fiber.Ctx) error {
 		"cpu_percentage": usedCPUPercentage,
 	}
 	// Solo llamar a getMem y getCpuPercentage después de 50 llamadas
-	if currentCount >= 20 {
-		getMem()
-		getCpuPercentage("cpu%")
-		atomic.StoreInt32(&callCount, 0)
-	}
+	// if currentCount >= 20 {
+	// 	getMem()
+	// 	getCpuPercentage("cpu%")
+	// 	atomic.StoreInt32(&callCount, 0)
+	// }
 	// getMem()
 	// getCpuPercentage("cpu%")
 	return c.JSON(estadisticas)
@@ -132,7 +172,7 @@ func getMem() (Model.Ram, error) {
 	DbTotal := total
 	DbEnUso := enUso
 	Dblibre := libre
-	DbPorcentaje := 100 - porcentaje
+	DbPorcentaje := porcentaje //cualquier inconveniente poner 100 - porcentaje
 
 	Controller.InsertRam("ram", DbTotal, DbEnUso, Dblibre, DbPorcentaje)
 
