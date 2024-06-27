@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grpc-producer
-  namespace: so1jun2024
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -35,7 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: grpc-client-service
-  namespace: so1jun2024
+  namespace: project
 spec:
   selector:
     app: grpc-producer
