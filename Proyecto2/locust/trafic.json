@@ -1,0 +1,46 @@
+[
+    {
+      "texto": "Lluvia",
+      "pais": "Guatemala"
+    },
+    {
+      "texto": "Sol",
+      "pais": "México"
+    },
+    {
+      "texto": "Nieve",
+      "pais": "Argentina"
+    },
+    {
+      "texto": "Viento",
+      "pais": "Chile"
+    },
+    {
+      "texto": "Tormenta",
+      "pais": "Perú"
+    },
+    {
+      "texto": "Granizo",
+      "pais": "Uruguay"
+    },
+    {
+      "texto": "Niebla",
+      "pais": "Ecuador"
+    },
+    {
+      "texto": "Calor",
+      "pais": "Brasil"
+    },
+    {
+      "texto": "Frío",
+      "pais": "Colombia"
+    },
+    {
+      "texto": "Huracán",
+      "pais": "Cuba"
+    },
+    {
+      "texto": "Brisa",
+      "pais": "Paraguay"
+    }
+]

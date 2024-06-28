@@ -26,7 +26,7 @@ class Reader():
     def load(self):
         print(">> Reader: Iniciando lectura del archivo de datos")
         try:
-            with open("trafic.json", "r",encoding='utf-8') as data_file:
+            with open("trafic.json", "r") as data_file:
                 self.array = json.loads(data_file.read())
         except Exception as error:
             print(f'>> Reader: Error en {error}')
@@ -46,11 +46,11 @@ class MessageTraffic(HttpUser):
         if ( random_data is not None ):
             data_to_send = json.dumps(random_data)
             printDebug(data_to_send)
-            self.client.post("/insert", json=random_data)
+            self.client.post("/", json=random_data)
         else:
             print(">> MessageTraffic: Envío finalizado")
             self.stop(True)
 
-    @task
-    def GetMessage(self):
-        self.client.get("/")
+    # @task
+    # def GetMessage(self):
+    #     self.client.get("/")

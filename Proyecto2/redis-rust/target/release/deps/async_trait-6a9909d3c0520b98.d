@@ -1,0 +1,12 @@
+/home/taro/Escritorio/SO1_JUN2024_PAREJA18/Proyecto2/redis-rust/target/release/deps/libasync_trait-6a9909d3c0520b98.so: /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/lib.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/args.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/bound.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/expand.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/lifetime.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/parse.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/receiver.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/verbatim.rs
+
+/home/taro/Escritorio/SO1_JUN2024_PAREJA18/Proyecto2/redis-rust/target/release/deps/async_trait-6a9909d3c0520b98.d: /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/lib.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/args.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/bound.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/expand.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/lifetime.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/parse.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/receiver.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/verbatim.rs
+
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/lib.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/args.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/bound.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/expand.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/lifetime.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/parse.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/receiver.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/async-trait-0.1.80/src/verbatim.rs:

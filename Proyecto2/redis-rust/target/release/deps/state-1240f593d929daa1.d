@@ -1,0 +1,12 @@
+/home/taro/Escritorio/SO1_JUN2024_PAREJA18/Proyecto2/redis-rust/target/release/deps/libstate-1240f593d929daa1.rmeta: /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/lib.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/ident_hash.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/cell.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/init.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/shim.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/type_map.rs
+
+/home/taro/Escritorio/SO1_JUN2024_PAREJA18/Proyecto2/redis-rust/target/release/deps/libstate-1240f593d929daa1.rlib: /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/lib.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/ident_hash.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/cell.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/init.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/shim.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/type_map.rs
+
+/home/taro/Escritorio/SO1_JUN2024_PAREJA18/Proyecto2/redis-rust/target/release/deps/state-1240f593d929daa1.d: /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/lib.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/ident_hash.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/cell.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/init.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/shim.rs /home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/type_map.rs
+
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/lib.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/ident_hash.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/cell.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/init.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/shim.rs:
+/home/taro/.cargo/registry/src/index.crates.io-6f17d22bba15001f/state-0.6.0/src/type_map.rs:
