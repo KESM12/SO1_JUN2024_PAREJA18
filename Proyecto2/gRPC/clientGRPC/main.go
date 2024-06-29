@@ -28,7 +28,7 @@ func sendToRust(data *Data) {
 		log.Fatal(err)
 	}
 
-	res, err := http.Post("http://localhost:8000/set", "application/json", bytes.NewBuffer(jsonData))
+	res, err := http.Post("http://rust-redis-service:8000/set", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,42 +100,3 @@ func main() {
 		log.Fatal(err)
 	}
 }
-
-// func sendData(c *fiber.Ctx) error {
-// 	var data map[string]string
-// 	e := c.BodyParser(&data)
-// 	if e != nil {
-// 		return e
-// 	}
-
-// 	tweet := Data{
-// 		Texto: data["texto"],
-// 		Pais:  data["pais"],
-// 	}
-
-// 	conn, err := grpc.Dial("localhost:3001", grpc.WithTransportCredentials(insecure.NewCredentials()),
-// 		grpc.WithBlock())
-// 	if err != nil {
-// 		log.Fatalf("did not connect: %v", err)
-// 	}
-
-// 	cl := pb.NewGetInfoClient(conn)
-// 	defer func(conn *grpc.ClientConn) {
-// 		err := conn.Close()
-// 		if err != nil {
-// 			log.Fatalf("could not close connection: %v", err)
-// 		}
-// 	}(conn)
-
-// 	ret, err := cl.ReturnInfo(ctx, &pb.RequestId{
-// 		Texto: tweet.Texto,
-// 		Pais:  tweet.Pais,
-// 	})
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	fmt.Println("Respuesta del servidor ", ret)
-
-// 	return c.JSON("Tweet enviado.")
-// }
