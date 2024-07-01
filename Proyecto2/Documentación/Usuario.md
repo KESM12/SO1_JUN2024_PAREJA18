@@ -1,6 +1,7 @@
 # MANUAL DE USUARIO 
 
-**Graficas**
+**Graficas (Grafana)**
+Grafana es una plataforma de código abierto para la visualización, monitoreo y análisis de datos en tiempo real. Fue diseñada para ayudar a los usuarios a entender y analizar grandes volúmenes de datos provenientes de diversas fuentes.
 
 ![Grafica](../Documentación/img/Graficas.jpg)
 
