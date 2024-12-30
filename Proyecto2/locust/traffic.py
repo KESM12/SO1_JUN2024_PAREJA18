@@ -59,7 +59,7 @@ def generar_datos(num_datos):
     return datos
 
 # Generar 10,000 datos aleatorios
-datos_json = generar_datos(10000)
+datos_json = generar_datos(10)
 
 # Guardar los datos en un archivo JSON
 with open('datos_clima_paises.json', 'w', encoding='utf-8') as file:

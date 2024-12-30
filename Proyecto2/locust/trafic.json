@@ -1,282 +1,42 @@
 [
     {
-        "texto": "Calor sofocante",
-        "pais": "Turquía"
-    },
-    {
-        "texto": "Clima cambiante constantemente",
-        "pais": "Corea del Sur"
-    },
-    {
         "texto": "Brisa suave y agradable",
-        "pais": "Tanzania"
-    },
-    {
-        "texto": "Atardecer con colores intensos",
-        "pais": "India"
-    },
-    {
-        "texto": "Mañana húmeda y fresca",
-        "pais": "Chad"
-    },
-    {
-        "texto": "Calor sofocante",
-        "pais": "Corea del Sur"
-    },
-    {
-        "texto": "Nieve fresca sobre las montañas",
-        "pais": "Etiopía"
-    },
-    {
-        "texto": "Agradable clima fresco",
-        "pais": "Nicaragua"
-    },
-    {
-        "texto": "Nebulosa mañana de otoño",
-        "pais": "Países Bajos"
-    },
-    {
-        "texto": "Frente frío acercándose",
-        "pais": "Laos"
-    },
-    {
-        "texto": "Calor sofocante",
-        "pais": "México"
-    },
-    {
-        "texto": "Clima cambiante constantemente",
-        "pais": "Nueva Zelanda"
-    },
-    {
-        "texto": "Granizo inesperado",
-        "pais": "Etiopía"
-    },
-    {
-        "texto": "Frente frío acercándose",
-        "pais": "Surinam"
-    },
-    {
-        "texto": "Granizo inesperado",
-        "pais": "Sudán"
-    },
-    {
-        "texto": "Calor sofocante en la ciudad",
-        "pais": "Kenia"
-    },
-    {
-        "texto": "Tarde soleada y tranquila",
-        "pais": "Qatar"
-    },
-    {
-        "texto": "Tormenta de verano repentina",
-        "pais": "Nueva Zelanda"
-    },
-    {
-        "texto": "Tormenta de verano repentina",
-        "pais": "Ucrania"
-    },
-    {
-        "texto": "Heladas matinales en invierno",
-        "pais": "Suecia"
-    },
-    {
-        "texto": "Niebla espesa en el valle",
-        "pais": "Yemen"
+        "pais": "Omán"
     },
     {
         "texto": "Olas altas en la costa",
-        "pais": "Kenia"
-    },
-    {
-        "texto": "Tormenta de verano repentina",
-        "pais": "Mongolia"
-    },
-    {
-        "texto": "Mañana húmeda y fresca",
-        "pais": "Madagascar"
-    },
-    {
-        "texto": "Mañana húmeda y fresca",
-        "pais": "Corea del Sur"
-    },
-    {
-        "texto": "Calor sofocante",
-        "pais": "Chad"
-    },
-    {
-        "texto": "Calor sofocante en la ciudad",
-        "pais": "Reino Unido"
-    },
-    {
-        "texto": "Clima cambiante constantemente",
-        "pais": "Cabo Verde"
-    },
-    {
-        "texto": "Tarde soleada y tranquila",
-        "pais": "Nueva Zelanda"
-    },
-    {
-        "texto": "Clima cambiante constantemente",
-        "pais": "Panamá"
-    },
-    {
-        "texto": "Aroma a tierra mojada después de la lluvia",
-        "pais": "España"
-    },
-    {
-        "texto": "Tormenta de verano repentina",
-        "pais": "Finlandia"
-    },
-    {
-        "texto": "Calor sofocante",
-        "pais": "España"
-    },
-    {
-        "texto": "Me encanta la lluvia",
-        "pais": "Yemen"
+        "pais": "Honduras"
     },
     {
         "texto": "Lluvia ligera y persistente",
-        "pais": "Rusia"
-    },
-    {
-        "texto": "Tarde soleada y tranquila",
-        "pais": "Letonia"
-    },
-    {
-        "texto": "Clima cambiante constantemente",
-        "pais": "Estados Unidos"
-    },
-    {
-        "texto": "Frío intenso esta semana",
-        "pais": "Brasil"
-    },
-    {
-        "texto": "Frío intenso esta semana",
-        "pais": "Finlandia"
-    },
-    {
-        "texto": "Aroma a tierra mojada después de la lluvia",
-        "pais": "Zimbabue"
-    },
-    {
-        "texto": "Olas altas en la costa",
-        "pais": "Iraq"
-    },
-    {
-        "texto": "Calor sofocante en la ciudad",
-        "pais": "Cabo Verde"
-    },
-    {
-        "texto": "Niebla espesa en el valle",
-        "pais": "España"
-    },
-    {
-        "texto": "Tormenta de verano repentina",
-        "pais": "Vietnam"
-    },
-    {
-        "texto": "Nebulosa mañana de otoño",
-        "pais": "India"
-    },
-    {
-        "texto": "Calor sofocante en la ciudad",
-        "pais": "Vietnam"
-    },
-    {
-        "texto": "Paisaje cubierto de nieve",
-        "pais": "Nicaragua"
-    },
-    {
-        "texto": "Tormenta intensa esta noche",
-        "pais": "Tanzania"
-    },
-    {
-        "texto": "Aroma a tierra mojada después de la lluvia",
-        "pais": "Siria"
+        "pais": "Senegal"
     },
     {
         "texto": "Huracán en la región",
-        "pais": "Finlandia"
+        "pais": "Senegal"
     },
     {
-        "texto": "Agradable clima fresco",
-        "pais": "Japón"
-    },
-    {
-        "texto": "Hace mucho viento hoy",
-        "pais": "Barbados"
-    },
-    {
-        "texto": "Paisaje cubierto de nieve",
-        "pais": "Mauritania"
+        "texto": "Lindo día soleado",
+        "pais": "Bolivia"
     },
     {
         "texto": "Tormenta intensa esta noche",
-        "pais": "Zimbabue"
-    },
-    {
-        "texto": "Noche estrellada y despejada",
-        "pais": "Cabo Verde"
-    },
-    {
-        "texto": "Viento frío del norte",
-        "pais": "Zimbabue"
-    },
-    {
-        "texto": "Agradable clima fresco",
-        "pais": "Irán"
-    },
-    {
-        "texto": "Ráfagas de viento fuerte",
-        "pais": "Uganda"
-    },
-    {
-        "texto": "Paisaje cubierto de nieve",
-        "pais": "Laos"
-    },
-    {
-        "texto": "Niebla espesa en el valle",
-        "pais": "Kenia"
-    },
-    {
-        "texto": "Viento frío del norte",
-        "pais": "Italia"
-    },
-    {
-        "texto": "Frío intenso esta semana",
-        "pais": "Dinamarca"
-    },
-    {
-        "texto": "Granizo inesperado",
-        "pais": "Argentina"
-    },
-    {
-        "texto": "Tormenta intensa esta noche",
-        "pais": "Panamá"
-    },
-    {
-        "texto": "Agradable clima fresco",
-        "pais": "Chad"
+        "pais": "Honduras"
     },
     {
         "texto": "Calor sofocante",
-        "pais": "Papúa Nueva Guinea"
+        "pais": "Benín"
     },
     {
-        "texto": "Clima cambiante constantemente",
-        "pais": "Papúa Nueva Guinea"
+        "texto": "Paisaje cubierto de nieve",
+        "pais": "Japón"
     },
     {
-        "texto": "Hace mucho viento hoy",
-        "pais": "Malasia"
+        "texto": "Frío intenso esta semana",
+        "pais": "Reino Unido"
     },
     {
-        "texto": "Olas altas en la costa",
-        "pais": "India"
-    },
-    {
-        "texto": "Heladas matinales en invierno",
-        "pais": "Grecia"
+        "texto": "Mañana húmeda y fresca",
+        "pais": "Sudán"
     }
 ]

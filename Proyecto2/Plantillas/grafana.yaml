@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: so1jun2024
+  namespace: project
 spec:
   replicas: 1
   selector:
@@ -10,7 +10,6 @@ spec:
       app: grafana
   template:
     metadata:
-      name: grafana
       labels:
         app: grafana
     spec:
@@ -19,7 +18,10 @@ spec:
         image: grafana/grafana:8.4.4
         ports:
         - name: grafana
-          containerPort: 3010
+          containerPort: 4000
+        env:
+        - name: GF_SERVER_HTTP_PORT
+          value: "4000"
         resources:
           limits:
             memory: "1Gi"
@@ -27,3 +29,17 @@ spec:
           requests:
             memory: 500M
             cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: project
+spec:
+  selector:
+    app: grafana
+  ports:
+  - protocol: TCP
+    port: 4000
+    targetPort: 4000
+  type: ClusterIP

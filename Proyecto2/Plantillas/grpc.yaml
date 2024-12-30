@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: grpc-client
-        image: kesm12/clientgrpc
+        image: kesm12/clientgrpc:v10
         ports:
         - containerPort: 3000
         resources:
@@ -23,13 +23,21 @@ spec:
             cpu: "0.4"
             memory: "500Mi"
       - name: grpc-server
-        image: kesm12/servergrpc
+        image: kesm12/servergrpc:v7
         ports:
         - containerPort: 3001
         resources:
           limits:
             cpu: "0.4"
             memory: "500Mi"
+      - name: rust-api
+        image: kesm12/redis-rust:v5
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: "0.3"
+            memory: "300Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -44,3 +52,31 @@ spec:
       port: 3000
       targetPort: 3000
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-server-service
+  namespace: project
+spec:
+  selector:
+    app: grpc-producer
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rust-redis-service
+  namespace: project
+spec:
+  selector:
+    app: grpc-producer
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer
